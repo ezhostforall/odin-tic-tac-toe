@@ -92,6 +92,12 @@ const GameController = (function() {
                     gameOver = true;
                     return;
                 }
+                if (checkTie()) {
+                    console.log("It's a tie!");
+                    board.printBoard();
+                    gameOver = true;
+                    return;
+                }
                 
                 board.printBoard();
                 switchPlayer();
@@ -142,6 +148,11 @@ const GameController = (function() {
 
         return false;
 
+    }
+
+    const checkTie = () => {
+        const currentBoard = board.getBoard();
+        return currentBoard.flat().every(cell => cell !== " ");
     }
 
     return {
