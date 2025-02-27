@@ -9,11 +9,11 @@ const GameBoard = (function() {
     const getBoard = () => board.map(row => [...row]);
 
     const resetBoard = () => {
-        board = [
-            [" ", " ", " "],
-            [" ", " ", " "],
-            [" ", " ", " "]
-        ];
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                board[i][j] = " ";
+            }
+        }
     }
 
     const printBoard = () => {
@@ -40,11 +40,7 @@ const GameBoard = (function() {
 })();
 
 function Player(name, mark) {
-    this._name = name;
-    this._mark = mark;
-    this.getName = () => this._name;
-    this.getMark = () => this._mark;
-    return { name: this.getName(), mark: this.getMark() };
+    return { name, mark };
 }
 
 const GameController = (function() {
@@ -119,7 +115,7 @@ const GameController = (function() {
                     return true;
                 }
 
-            if (currentBoard[i][0] !== " " &&
+            if (currentBoard[0][i] !== " " &&
                 currentBoard[0][i] === mark &&
                 currentBoard[1][i] === mark &&
                 currentBoard[2][i] === mark) {
