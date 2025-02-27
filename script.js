@@ -51,7 +51,7 @@ const GameController = (function() {
     let player1,
         player2,    
         currentPlayer;
-    let gameOver = false,
+    let gameOver = false;
     let board = GameBoard;
     
     const startGame = (playerOne = "Player 1", playerTwo = "Player 2") => {
