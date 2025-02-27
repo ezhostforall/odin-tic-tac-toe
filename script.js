@@ -95,7 +95,9 @@ const GameController = (function() {
                 
                 board.printBoard();
                 switchPlayer();
-            }  
+            }  else {
+                console.log("Invalid move! Try again.");
+            }
             
         }
     }
@@ -144,15 +146,11 @@ const GameController = (function() {
 
     return {
         startGame,
+        switchPlayer,
+        getCurrentPlayer
     };
 
 })();
 
-const gameBoard = GameBoard;
-gameBoard.printBoard();
-gameBoard.placeMark(0, 0, "X");
-gameBoard.printBoard();
-gameBoard.placeMark(1, 1, "O");
-gameBoard.printBoard();
 const gameController = GameController;
 gameController.startGame("Player 1", "Player 2");
