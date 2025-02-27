@@ -6,7 +6,7 @@ const GameBoard = (function() {
         [" ", " ", " "]
     ];
 
-    const getBoard = () => board;
+    const getBoard = () => board.map(row => [...row]);
 
     const resetBoard = () => {
         board = [
@@ -51,9 +51,8 @@ const GameController = (function() {
     let player1,
         player2,    
         currentPlayer;
-
-        gameOver = false;
-        board = GameBoard;
+    let gameOver = false,
+    let board = GameBoard;
     
     const startGame = (playerOne = "Player 1", playerTwo = "Player 2") => {
         player1 = new Player(playerOne, "X");
@@ -109,7 +108,7 @@ const GameController = (function() {
     }
 
     const checkWinner = (mark) => {
-        currentBoard = board.getBoard();
+        const currentBoard = board.getBoard();
         
         for (let i = 0; i < 3; i++) {
             if (currentBoard[i][0] !== " " &&
