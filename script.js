@@ -43,6 +43,78 @@ function Player(name, mark) {
     return { name, mark };
 }
 
+const DisplayController = (function() {
+    const boardContainer = document.querySelector("#game-board");
+    const vsInfoDisplay = document.querySelector(".vs-info-display");
+    const startButton = document.querySelector("#start-button");
+    const message = document.querySelector("#message");
+
+    const renderBoard = () => {
+        boardContainer.innerHTML = "";
+        const currentBoard = GameBoard.getBoard();
+
+        currentBoard.forEach ((row, rowIndex) => {
+            row.forEach((cel, colIndex) => {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                cell.textContent = cel;
+                cell.dataset.row = rowIndex;
+                cell.dataset.col = colIndex;
+                cell.addEventListener("click", handleCellClick);
+                boardContainer.appendChild(cell);
+            })
+        })
+    }
+
+    const handleCellClick = (event) => {
+        if (GameController.isGameOver()) return;
+        const row = parseInt(event.target.dataset.row);
+        const col = parseInt(event.target.dataset.col);
+        GameController.playRound(row, col);
+    };
+
+    const handleStartButton = () => {
+        const playerOne = prompt("Enter player 1 name: ");
+        const playerTwo = prompt("Enter player 2 name: ");
+        
+        GameController.startGame(playerOne, playerTwo);
+    }
+
+    const updateVsInfo = (text) => {
+        if (vsInfoDisplay) { 
+            vsInfoDisplay.textContent = text; 
+        } else {
+            console.error("❌ vsInfoDisplay element not found in the DOM!");
+        }
+    };
+
+    const updateMessage = (text) => {
+        if (message) { 
+            message.textContent = text; 
+        } else {
+            console.error("❌ message element not found in the DOM!");
+        }
+    };
+
+    const updateButtonText = (text) => {
+        if (startButton) { 
+            startButton.textContent = text; 
+        } else {
+            console.error("❌ startButton element not found in the DOM!");
+        }
+    };
+
+    startButton.addEventListener("click", handleStartButton);
+
+    return {
+        renderBoard,
+        updateVsInfo,
+        updateMessage,
+        updateButtonText
+    }
+
+})();
+
 const GameController = (function() {
     let player1,
         player2,    
@@ -58,49 +130,61 @@ const GameController = (function() {
 
         gameOver = false;
         board.resetBoard();
+        DisplayController.renderBoard();
+        
+        DisplayController.updateVsInfo(`${player1.name} vs ${player2.name}`);
+        DisplayController.updateMessage(`${player1.name} goes first!`);
+        DisplayController.updateButtonText("Restart");
 
         console.log(`${player1.name} vs ${player2.name}`);
         console.log(`${player1.name} goes first!`);
-
-        playRound();
     }
 
     const switchPlayer = () => {
         currentPlayer = currentPlayer === player1 ? player2 : player1;
+
     }
 
     const getCurrentPlayer = () => currentPlayer;
 
-    const playRound = () => {
-        while (!gameOver) {
-            
-            console.log(`It's ${currentPlayer.name}'s turn!`)
-            board.printBoard();
+    const playRound = (row, col) => {
 
-            let row = parseInt(prompt("Enter row (0-2): "));
-            let col = parseInt(prompt("Enter column (0-2): "));
+            if (isGameOver()) return;
 
             if (board.placeMark(row, col, currentPlayer.mark)) {
+                DisplayController.renderBoard();
                 if (checkWinner(currentPlayer.mark)) {
+                    
+                    DisplayController.updateVsInfo(`${currentPlayer.name} wins!`);
+                    DisplayController.updateMessage(`${currentPlayer.name} wins!`);
                     console.log(`${currentPlayer.name} wins!`);
                     board.printBoard();
                     gameOver = true;
                     return;
-                }
-                if (checkTie()) {
+                } else if (checkTie()) {
+                    
+                    DisplayController.updateVsInfo("It's a tie!");
+                    DisplayController.updateMessage("It's a tie!");
                     console.log("It's a tie!");
                     board.printBoard();
                     gameOver = true;
                     return;
+                } else {
+                    switchPlayer();
+                    DisplayController.updateMessage(`It's ${currentPlayer.name}'s turn!`);
+                    console.log(`It's ${currentPlayer.name}'s turn!`)
                 }
                 
-                board.printBoard();
-                switchPlayer();
+
+            
             }  else {
+                
+                DisplayController.updateMessage("Invalid move! Try again.");
                 console.log("Invalid move! Try again.");
+                
             }
             
-        }
+        
     }
 
     const checkWinner = (mark) => {
@@ -150,13 +234,16 @@ const GameController = (function() {
         return currentBoard.flat().every(cell => cell !== " ");
     }
 
+    const isGameOver = () => gameOver;
+
     return {
         startGame,
         switchPlayer,
-        getCurrentPlayer
+        getCurrentPlayer,
+        playRound,
+        isGameOver
     };
 
 })();
 
-const gameController = GameController;
-gameController.startGame("Player 1", "Player 2");
+
