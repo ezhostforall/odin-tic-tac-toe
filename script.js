@@ -82,7 +82,7 @@ const DisplayController = (function () {
     if (vsInfoDisplay) {
       vsInfoDisplay.textContent = text;
     } else {
-      console.error("❌ vsInfoDisplay element not found in the DOM!");
+      console.error("vsInfoDisplay element not found in the DOM!");
     }
   };
 
@@ -90,7 +90,7 @@ const DisplayController = (function () {
     if (message) {
       message.textContent = text;
     } else {
-      console.error("❌ message element not found in the DOM!");
+      console.error("message element not found in the DOM!");
     }
   };
 
@@ -98,7 +98,7 @@ const DisplayController = (function () {
     if (startButton) {
       startButton.textContent = text;
     } else {
-      console.error("❌ startButton element not found in the DOM!");
+      console.error("startButton element not found in the DOM!");
     }
   };
 
@@ -147,16 +147,16 @@ const GameController = (function () {
     if (board.placeMark(row, col, currentPlayer.mark)) {
       DisplayController.renderBoard();
       if (checkWinner(currentPlayer.mark)) {
-        DisplayController.updateVsInfo(`${currentPlayer.name} wins!`);
-        DisplayController.updateMessage(`${currentPlayer.name} wins!`);
-        console.log(`${currentPlayer.name} wins!`);
+        DisplayController.updateVsInfo(`${currentPlayer.name.toUpperCase()} WINS!`);
+        DisplayController.updateMessage(`${currentPlayer.name.toUpperCase()} WINS!`);
+        console.log(`${currentPlayer.name} WINS!`);
         board.printBoard();
         gameOver = true;
         return;
       } else if (checkTie()) {
-        DisplayController.updateVsInfo("It's a tie!");
-        DisplayController.updateMessage("It's a tie!");
-        console.log("It's a tie!");
+        DisplayController.updateVsInfo("IT'S A TIE!");
+        DisplayController.updateMessage("IT'S A TIE!");
+        console.log("IT'S A TIE!");
         board.printBoard();
         gameOver = true;
         return;
